@@ -4,13 +4,13 @@ import com.aegro.projeto.model.ReciboCargaInfo;
 import com.aegro.projeto.service.ExcelExporter;
 import com.aegro.projeto.service.GeminiImageAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/recibo")
@@ -22,9 +22,18 @@ public class GeminiController {
     @Autowired
     private ExcelExporter excelExporter;
 
-    // para um ou mais arquivos
+    static class UploadResponse {
+        public List<ReciboCargaInfo> data;
+        public String excelId;
+
+        public UploadResponse(List<ReciboCargaInfo> data, String excelId) {
+            this.data = data;
+            this.excelId = excelId;
+        }
+    }
+
     @PostMapping("/upload")
-    public List<ReciboCargaInfo> processarMultiplasImagens(@RequestParam("imagem") MultipartFile[] imagens) throws IOException, InterruptedException {
+    public UploadResponse processarMultiplasImagens(@RequestParam("imagem") MultipartFile[] imagens) throws IOException, InterruptedException {
         List<ReciboCargaInfo> resultados = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {
@@ -32,14 +41,27 @@ public class GeminiController {
             imagem.transferTo(tempFile);
 
             ReciboCargaInfo info = geminiImageAnalyzer.analisarImagem(tempFile.getAbsolutePath());
-            excelExporter.exportToExcel(info);  
-
             resultados.add(info);
             tempFile.delete();
         }
 
-        return resultados;
+        String excelId = excelExporter.exportToExcel(resultados);
+        return new UploadResponse(resultados, excelId);
     }
 
-}
+    @GetMapping("/download/{id}")
+    public ResponseEntity<InputStreamResource> downloadExcel(@PathVariable String id) throws IOException {
+        File excelFile = excelExporter.getExcelFile(id);
 
+        if (excelFile == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(excelFile));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + excelFile.getName())
+                .contentLength(excelFile.length())
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(resource);
+    }
+}
