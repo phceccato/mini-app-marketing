@@ -1,3 +1,5 @@
+// código anteriormente comentado
+/*
 package com.aegro.projeto;
 
 import com.aegro.projeto.model.ReciboCargaInfo;
@@ -26,5 +28,17 @@ public class GeminiApplication implements CommandLineRunner {
         ReciboCargaInfo info = geminiImageAnalyzer.analisarImagem();
         excelExporter.exportToExcel(info);
         System.out.println("Extração e exportação concluídas.");
+    }
+}
+*/
+package com.aegro.projeto;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class GeminiApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(GeminiApplication.class, args);
     }
 }

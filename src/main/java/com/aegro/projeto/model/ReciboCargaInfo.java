@@ -7,6 +7,17 @@ public class ReciboCargaInfo {
     private String folhagem;
     private String nomeMotorista;
 
+    // constructor
+    public ReciboCargaInfo() {}
+
+    public ReciboCargaInfo(String peso, String umidade, String tipoCarga, String folhagem, String nomeMotorista) {
+    this.peso = peso;
+    this.umidade = umidade;
+    this.tipoCarga = tipoCarga;
+    this.folhagem = folhagem;
+    this.nomeMotorista = nomeMotorista;
+    }
+
     // Getters and Setters
     public String getPeso() { return peso; }
     public void setPeso(String peso) { this.peso = peso; }
