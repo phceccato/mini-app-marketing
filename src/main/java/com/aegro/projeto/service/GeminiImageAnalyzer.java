@@ -28,19 +28,23 @@ public class GeminiImageAnalyzer {
 
         String prompt = """
             Extraia as seguintes informações deste recibo de carga agrícola:
-            - peso
+            - data (formato: dd/MM/yyyy)
+            - nome do produtor (caso não tenha, coloque o nome da fazenda)
+            - tipo de cultura (exemplo: milho, soja, etc.)
+            - peso bruto em kg
             - umidade
-            - tipo de carga
-            - folhagem
-            - nome do motorista
+            - Impureza
+            - peso liquido em kg
 
             Responda em JSON com os seguintes campos:
             {
-              "peso": "...",
+              "data": "...", 
+              "nomeProdutor": "...",
+              "tipoCultura": "...",
+              "pesoBruto": "...",
               "umidade": "...",
-              "tipoCarga": "...",
-              "folhagem": "...",
-              "nomeMotorista": "..."
+              "impureza": "...",
+              "pesoLiquido": "..."
             }
             """;
 

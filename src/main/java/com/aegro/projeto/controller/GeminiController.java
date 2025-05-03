@@ -22,24 +22,8 @@ public class GeminiController {
     @Autowired
     private ExcelExporter excelExporter;
 
-    // para um unico arquivo 
-    // testado! 
+    // para um ou mais arquivos
     @PostMapping("/upload")
-    public ReciboCargaInfo processarImagem(@RequestParam("imagem") MultipartFile imagem) throws IOException, InterruptedException {
-        File tempFile = File.createTempFile("upload-", ".jpeg");
-        imagem.transferTo(tempFile);
-
-        ReciboCargaInfo info = geminiImageAnalyzer.analisarImagem(tempFile.getAbsolutePath());
-        excelExporter.exportToExcel(info);
-
-        tempFile.delete(); // ou mantenha se quiser inspecionar
-
-        return info;
-    }
-
-    // não testado!
-    // para multiplos arquivos
-    @PostMapping("/upload-multiplos")
     public List<ReciboCargaInfo> processarMultiplasImagens(@RequestParam("imagem") MultipartFile[] imagens) throws IOException, InterruptedException {
         List<ReciboCargaInfo> resultados = new ArrayList<>();
 
@@ -48,7 +32,7 @@ public class GeminiController {
             imagem.transferTo(tempFile);
 
             ReciboCargaInfo info = geminiImageAnalyzer.analisarImagem(tempFile.getAbsolutePath());
-            excelExporter.exportToExcel(info);  // Se quiser gerar vários arquivos
+            excelExporter.exportToExcel(info);  
 
             resultados.add(info);
             tempFile.delete();

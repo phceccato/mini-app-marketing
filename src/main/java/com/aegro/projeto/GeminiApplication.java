@@ -1,4 +1,4 @@
-// código anteriormente comentado
+// código anterior comentado
 /*
 package com.aegro.projeto;
 
