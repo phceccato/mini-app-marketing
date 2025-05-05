@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/recibo")
@@ -22,16 +23,28 @@ public class GeminiController {
     @Autowired
     private ExcelExporter excelExporter;
 
+    // temporary storage for extracted data
+    private final Map<String, List<ReciboCargaInfo>> pendingData = new ConcurrentHashMap<>();
+
     static class UploadResponse {
         public List<ReciboCargaInfo> data;
+        public String dataId;
+
+        public UploadResponse(List<ReciboCargaInfo> data, String dataId) {
+            this.data = data;
+            this.dataId = dataId;
+        }
+    }
+
+    static class ExcelResponse {
         public String excelId;
 
-        public UploadResponse(List<ReciboCargaInfo> data, String excelId) {
-            this.data = data;
+        public ExcelResponse(String excelId) {
             this.excelId = excelId;
         }
     }
 
+    // STEP 1: Upload and extract, store result temporarily
     @PostMapping("/upload")
     public UploadResponse processarMultiplasImagens(@RequestParam("imagem") MultipartFile[] imagens) throws IOException, InterruptedException {
         List<ReciboCargaInfo> resultados = new ArrayList<>();
@@ -45,10 +58,26 @@ public class GeminiController {
             tempFile.delete();
         }
 
-        String excelId = excelExporter.exportToExcel(resultados);
-        return new UploadResponse(resultados, excelId);
+        String dataId = UUID.randomUUID().toString();
+        pendingData.put(dataId, resultados);
+
+        return new UploadResponse(resultados, dataId);
     }
 
+    // STEP 2: Receive confirmed/corrected data and generate Excel
+    @PostMapping("/review/{dataId}")
+    public ResponseEntity<ExcelResponse> confirmarDadosCorrigidos(@PathVariable String dataId, @RequestBody List<ReciboCargaInfo> dadosCorrigidos) throws IOException {
+        if (!pendingData.containsKey(dataId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        pendingData.remove(dataId); // cleanup
+
+        String excelId = excelExporter.exportToExcel(dadosCorrigidos);
+        return ResponseEntity.ok(new ExcelResponse(excelId));
+    }
+
+    // STEP 3: Download the generated Excel
     @GetMapping("/download/{id}")
     public ResponseEntity<InputStreamResource> downloadExcel(@PathVariable String id) throws IOException {
         File excelFile = excelExporter.getExcelFile(id);
