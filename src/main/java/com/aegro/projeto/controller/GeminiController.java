@@ -8,13 +8,15 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/recibo")
+@RequestMapping("/api/recibo")  
 public class GeminiController {
 
     @Autowired
@@ -49,13 +51,20 @@ public class GeminiController {
     public UploadResponse processarMultiplasImagens(@RequestParam("imagem") MultipartFile[] imagens) throws IOException, InterruptedException {
         List<ReciboCargaInfo> resultados = new ArrayList<>();
 
+        if (imagens == null || imagens.length == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nenhuma imagem foi enviada!");
+        }
+
         for (MultipartFile imagem : imagens) {
             File tempFile = File.createTempFile("upload-", ".jpeg");
             imagem.transferTo(tempFile);
 
             ReciboCargaInfo info = geminiImageAnalyzer.analisarImagem(tempFile.getAbsolutePath());
             resultados.add(info);
-            tempFile.delete();
+
+            if (!tempFile.delete()) {
+                System.err.println("Falha ao deletar o arquivo temporário: " + tempFile.getAbsolutePath());
+            }
         }
 
         String dataId = UUID.randomUUID().toString();
