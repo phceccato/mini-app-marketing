@@ -31,10 +31,10 @@ public class GeminiImageAnalyzer {
             - data (formato: dd/MM/yyyy)
             - nome do produtor (caso não tenha, coloque o nome da fazenda)
             - tipo de cultura (exemplo: milho, soja, etc.)
-            - peso bruto em kg
-            - umidade
-            - Impureza
-            - peso liquido em kg
+            - peso bruto (se estiver em kg, coloque o valor + "kg", se não estiver, converta para kg e adicione "kg" após o valor)
+            - umidade (coloque em porcentagem, ex: 12.5%)
+            - Impureza (coloque em porcentagem, ex: 1%)
+            - peso liquido (se estiver em kg, coloque o valor + "kg", se não estiver, converta para kg e adicione "kg" após o valor)
 
             Responda em JSON com os seguintes campos:
             {
