@@ -17,6 +17,7 @@ export class UploadComponent {
   dataId: string = '';
   carregando = false;
   erro = '';
+  mensagem: string = ''; 
 
   constructor(private geminiService: GeminiService) {}
 
@@ -24,10 +25,21 @@ export class UploadComponent {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const novosArquivos = Array.from(input.files);
-      this.selectedFiles.push(...novosArquivos);
-
+      let arquivoDuplicado = false;
+  
+      for (const novo of novosArquivos) {
+        const jaExiste = this.selectedFiles.some(f => f.name === novo.name);
+        if (jaExiste) {
+          arquivoDuplicado = true;
+        } else {
+          this.selectedFiles.push(novo);
+        }
+      }
+  
+      // Exibe a mensagem apenas se algum arquivo repetido foi detectado
+      this.mensagem = arquivoDuplicado ? 'Este arquivo já foi selecionado.' : '';
     }
-  }
+  }  
 
   enviarArquivos(): void {
     if (this.selectedFiles.length === 0) return;

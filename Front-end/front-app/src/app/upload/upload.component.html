@@ -12,6 +12,8 @@
   <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
 </ul>
 
+<p *ngIf="mensagem" style="color: red;">{{ mensagem }}</p>
+
 <p *ngIf="carregando">Carregando...</p>
 <p *ngIf="erro" style="color: red;">{{ erro }}</p>
 
@@ -21,7 +23,7 @@
     <thead>
       <tr>
         <th>Data</th>
-        <th>Produtor</th>
+        <th>Produtor/Fazenda</th>
         <th>Cultura</th>
         <th>Peso Bruto</th>
         <th>Umidade</th>
