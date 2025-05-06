@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GeminiComponent } from './gemini.component';
+import { ReviewComponent } from './review.component';
 
-describe('GeminiComponent', () => {
-  let component: GeminiComponent;
-  let fixture: ComponentFixture<GeminiComponent>;
+describe('ReviewComponent', () => {
+  let component: ReviewComponent;
+  let fixture: ComponentFixture<ReviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GeminiComponent]
+      imports: [ReviewComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GeminiComponent);
+    fixture = TestBed.createComponent(ReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

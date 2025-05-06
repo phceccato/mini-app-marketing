@@ -1,0 +1,51 @@
+<h2>Upload de Romaneios</h2>
+
+<div class="upload-section">
+  <label class="custom-file-upload">
+    <input type="file" multiple (change)="onFileSelected($event)" hidden>
+    Escolher arquivos
+  </label>
+  <button (click)="enviarArquivos()">Enviar</button>
+</div>
+
+<ul>
+  <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+</ul>
+
+<p *ngIf="carregando">Carregando...</p>
+<p *ngIf="erro" style="color: red;">{{ erro }}</p>
+
+<div *ngIf="dadosExtraidos.length > 0">
+  <h3>Dados extraídos:</h3>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Produtor</th>
+        <th>Cultura</th>
+        <th>Peso Bruto</th>
+        <th>Umidade</th>
+        <th>Impureza</th>
+        <th>Peso Líquido</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of dadosExtraidos">
+        <td>{{ item.data }}</td>
+        <td>{{ item.nomeProdutor }}</td>
+        <td>{{ item.tipoCultura }}</td>
+        <td>{{ item.pesoBruto }}</td>
+        <td>{{ item.umidade }}</td>
+        <td>{{ item.impureza }}</td>
+        <td>{{ item.pesoLiquido }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-review
+  *ngIf="dadosExtraidos.length > 0"
+  [data]="dadosExtraidos"
+  [dataId]="dataId">
+</app-review>
+
