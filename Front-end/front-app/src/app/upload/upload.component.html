@@ -54,8 +54,8 @@
     <tbody>
       <tr *ngFor="let item of dadosExtraidos">
         <td>{{ item.data }}</td>
-        <td>{{ item.nomeProdutor }}</td>
-        <td>{{ item.tipoCultura }}</td>
+        <td>{{ item.nomeProdutor | uppercase }}</td>
+        <td>{{ item.tipoCultura | uppercase }}</td>
         <td>{{ item.pesoBruto }}</td>
         <td>{{ item.umidade }}</td>
         <td>{{ item.impureza }}</td>

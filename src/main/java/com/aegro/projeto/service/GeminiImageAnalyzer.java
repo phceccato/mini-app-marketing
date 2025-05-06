@@ -30,7 +30,7 @@ public class GeminiImageAnalyzer {
             Extraia as seguintes informações deste recibo de carga agrícola:
             - data (formato: dd/MM/yyyy)
             - nome do produtor (caso não tenha, coloque o nome da fazenda)
-            - tipo de cultura (exemplo: milho, soja, etc.)
+            - tipo de cultura (retorne SOMENTE o nome da cultura, exemplo: se a cultura for "milho em grãos", retorne apenas "milho".)
             - peso bruto (se estiver em kg, coloque o valor + "kg", se não estiver, converta para kg e adicione "kg" após o valor)
             - umidade (coloque em porcentagem, ex: 12.5%)
             - Impureza (coloque em porcentagem, ex: 1%)

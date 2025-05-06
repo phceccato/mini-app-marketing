@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th>Data</th>
-      <th>Produtor</th>
+      <th>Produtor/Fazenda</th>
       <th>Cultura</th>
       <th>Peso Bruto</th>
       <th>Umidade</th>
@@ -15,8 +15,8 @@
   <tbody>
     <tr *ngFor="let item of data">
       <td><input [(ngModel)]="item.data" /></td>
-      <td><input [(ngModel)]="item.nomeProdutor" /></td>
-      <td><input [(ngModel)]="item.tipoCultura" /></td>
+      <td>{{ item.nomeProdutor | uppercase }}</td>
+      <td>{{ item.tipoCultura | uppercase }}</td>
       <td><input [(ngModel)]="item.pesoBruto" /></td>
       <td><input [(ngModel)]="item.umidade" /></td>
       <td><input [(ngModel)]="item.impureza" /></td>
