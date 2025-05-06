@@ -25,21 +25,35 @@ export class UploadComponent {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const novosArquivos = Array.from(input.files);
-      let arquivoDuplicado = false;
+      const arquivosRepetidos: string[] = [];
+      const nomesJaSelecionados = new Set(this.selectedFiles.map(f => f.name));
+      const nomesAdicionadosNoMesmoEnvio = new Set<string>();
   
       for (const novo of novosArquivos) {
-        const jaExiste = this.selectedFiles.some(f => f.name === novo.name);
-        if (jaExiste) {
-          arquivoDuplicado = true;
+        const nome = novo.name;
+  
+        const duplicado =
+          nomesJaSelecionados.has(nome) || nomesAdicionadosNoMesmoEnvio.has(nome);
+  
+        if (duplicado) {
+          arquivosRepetidos.push(nome);
         } else {
           this.selectedFiles.push(novo);
+          nomesAdicionadosNoMesmoEnvio.add(nome);
         }
       }
   
-      // Exibe a mensagem apenas se algum arquivo repetido foi detectado
-      this.mensagem = arquivoDuplicado ? 'Este arquivo já foi selecionado.' : '';
+      if (arquivosRepetidos.length > 0) {
+        this.mensagem = `Arquivo já selecionado: ${arquivosRepetidos.join(', ')}`;
+        setTimeout(() => {
+          this.mensagem = '';
+        }, 3000);
+      } else {
+        this.mensagem = '';
+      }
     }
   }  
+  
 
   enviarArquivos(): void {
     if (this.selectedFiles.length === 0) return;
@@ -59,4 +73,19 @@ export class UploadComponent {
       }
     });
   }
+
+  removerArquivo(index: number): void {
+    this.selectedFiles.splice(index, 1);
+  }
+
+  limparTela(): void {
+    this.selectedFiles = [];
+    this.dadosExtraidos = [];
+    this.dataId = '';
+    this.mensagem = '';
+    this.erro = '';
+    this.carregando = false;
+  }  
 }
+
+

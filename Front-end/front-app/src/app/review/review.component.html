@@ -25,5 +25,6 @@
   </tbody>
 </table>
 
-<button (click)="gerarExcel()" [disabled]="gerando || excelId">Gerar Excel</button>
-<button *ngIf="excelId" (click)="baixarExcel()">Baixar Excel</button>
+<button (click)="baixarExcel()" [disabled]="gerando">Baixar Excel</button>
+<p *ngIf="erro" style="color:red">{{ erro }}</p>
+<p *ngIf="gerando">Gerando e baixando Excel...</p>

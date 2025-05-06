@@ -5,11 +5,24 @@
     <input type="file" multiple (change)="onFileSelected($event)" hidden>
     Escolher arquivos
   </label>
-  <button (click)="enviarArquivos()">Enviar</button>
+
+  <button 
+    (click)="enviarArquivos()" 
+    *ngIf="selectedFiles.length > 0">
+    Enviar
+  </button>
 </div>
 
 <ul>
-  <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+  <li *ngFor="let file of selectedFiles; let i = index">
+    {{ file.name }}
+    <span 
+      (click)="removerArquivo(i)" 
+      style="color: red; cursor: pointer; margin-left: 8px;"
+      title="Remover">
+      &times;
+    </span>
+  </li>
 </ul>
 
 <p *ngIf="mensagem" style="color: red;">{{ mensagem }}</p>
@@ -48,6 +61,9 @@
 <app-review
   *ngIf="dadosExtraidos.length > 0"
   [data]="dadosExtraidos"
-  [dataId]="dataId">
+  [dataId]="dataId"
+  (aoFinalizar)="limparTela()">
 </app-review>
+
+
 

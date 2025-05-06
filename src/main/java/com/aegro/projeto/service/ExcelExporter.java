@@ -1,6 +1,7 @@
 package com.aegro.projeto.service;
 
-import com.aegro.projeto.model.ReciboCargaInfo;
+import com.aegro.projeto.model.RomaneioInfo;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class ExcelExporter {
 
     private static final String FOLDER = "excel_output";
 
-    public String exportToExcel(List<ReciboCargaInfo> infoList) throws IOException {
+    public String exportToExcel(List<RomaneioInfo> infoList) throws IOException {
         File dir = new File(FOLDER);
         if (!dir.exists()) dir.mkdirs();
 
@@ -35,7 +36,7 @@ public class ExcelExporter {
         header.createCell(6).setCellValue("Peso Líquido");
 
         int rowIdx = 1;
-        for (ReciboCargaInfo info : infoList) {
+        for (RomaneioInfo info : infoList) {
             Row row = sheet.createRow(rowIdx++);
             row.createCell(0).setCellValue(info.getData());
             row.createCell(1).setCellValue(info.getNomeProdutor());

@@ -1,6 +1,6 @@
 package com.aegro.projeto.service;
 
-import com.aegro.projeto.model.ReciboCargaInfo;
+import com.aegro.projeto.model.RomaneioInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class GeminiImageAnalyzer {
     private String apiKey;
 
     // Método principal com caminho da imagem como parâmetro
-    public ReciboCargaInfo analisarImagem(String imagePath) throws IOException, InterruptedException {
+    public RomaneioInfo analisarImagem(String imagePath) throws IOException, InterruptedException {
         byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
@@ -95,11 +95,11 @@ public class GeminiImageAnalyzer {
             rawJson = rawJson.replaceAll("(?s)```\\s*(\\{.*?\\})\\s*```", "$1");
         }
 
-        return mapper.readValue(rawJson, ReciboCargaInfo.class);
+        return mapper.readValue(rawJson, RomaneioInfo.class);
     }
 
     // Método auxiliar opcional (mantido para compatibilidade)
-    public ReciboCargaInfo analisarImagem() throws IOException, InterruptedException {
+    public RomaneioInfo analisarImagem() throws IOException, InterruptedException {
         return analisarImagem("src/main/resources/imagens/Milho 1.jpeg");
     }
 }

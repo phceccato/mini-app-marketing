@@ -1,6 +1,6 @@
 package com.aegro.projeto.model;
 
-public class ReciboCargaInfo {
+public class RomaneioInfo {
     private String data;
     private String nomeProdutor;
     private String tipoCultura;
@@ -10,11 +10,11 @@ public class ReciboCargaInfo {
     private String pesoLiquido;
     
     // Construtor padrão
-    public ReciboCargaInfo() {
+    public RomaneioInfo() {
     }
 
     // Construtor com todos os campos
-    public ReciboCargaInfo(String data, String nomeProdutor, String tipoCultura,
+    public RomaneioInfo(String data, String nomeProdutor, String tipoCultura,
                            String pesoBruto, String umidade, String impureza, String pesoLiquido) {
         this.data = data;
         this.nomeProdutor = nomeProdutor;

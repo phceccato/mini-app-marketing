@@ -1,6 +1,6 @@
 package com.aegro.projeto.controller;
 
-import com.aegro.projeto.model.ReciboCargaInfo;
+import com.aegro.projeto.model.RomaneioInfo;
 import com.aegro.projeto.service.ExcelExporter;
 import com.aegro.projeto.service.GeminiImageAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ public class GeminiController {
     private ExcelExporter excelExporter;
 
     // temporary storage for extracted data
-    private final Map<String, List<ReciboCargaInfo>> pendingData = new ConcurrentHashMap<>();
+    private final Map<String, List<RomaneioInfo>> pendingData = new ConcurrentHashMap<>();
 
     static class UploadResponse {
-        public List<ReciboCargaInfo> data;
+        public List<RomaneioInfo> data;
         public String dataId;
 
-        public UploadResponse(List<ReciboCargaInfo> data, String dataId) {
+        public UploadResponse(List<RomaneioInfo> data, String dataId) {
             this.data = data;
             this.dataId = dataId;
         }
@@ -49,7 +49,7 @@ public class GeminiController {
     // STEP 1: Upload and extract, store result temporarily
     @PostMapping("/upload")
     public UploadResponse processarMultiplasImagens(@RequestParam("imagem") MultipartFile[] imagens) throws IOException, InterruptedException {
-        List<ReciboCargaInfo> resultados = new ArrayList<>();
+        List<RomaneioInfo> resultados = new ArrayList<>();
 
         if (imagens == null || imagens.length == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nenhuma imagem foi enviada!");
@@ -59,7 +59,7 @@ public class GeminiController {
             File tempFile = File.createTempFile("upload-", ".jpeg");
             imagem.transferTo(tempFile);
 
-            ReciboCargaInfo info = geminiImageAnalyzer.analisarImagem(tempFile.getAbsolutePath());
+            RomaneioInfo info = geminiImageAnalyzer.analisarImagem(tempFile.getAbsolutePath());
             resultados.add(info);
 
             if (!tempFile.delete()) {
@@ -75,7 +75,7 @@ public class GeminiController {
 
     // STEP 2: Receive confirmed/corrected data and generate Excel
     @PostMapping("/review/{dataId}")
-    public ResponseEntity<ExcelResponse> confirmarDadosCorrigidos(@PathVariable String dataId, @RequestBody List<ReciboCargaInfo> dadosCorrigidos) throws IOException {
+    public ResponseEntity<ExcelResponse> confirmarDadosCorrigidos(@PathVariable String dataId, @RequestBody List<RomaneioInfo> dadosCorrigidos) throws IOException {
         if (!pendingData.containsKey(dataId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
