@@ -17,49 +17,61 @@ export class UploadComponent {
   dataId: string = '';
   carregando = false;
   erro = '';
-  mensagem: string = ''; 
+  mensagem: string = '';
+  isDragging = false;
 
   constructor(private geminiService: GeminiService) {}
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      const novosArquivos = Array.from(input.files);
-      const arquivosRepetidos: string[] = [];
-      const nomesJaSelecionados = new Set(this.selectedFiles.map(f => f.name));
-      const nomesAdicionadosNoMesmoEnvio = new Set<string>();
-  
-      for (const novo of novosArquivos) {
-        const nome = novo.name;
-  
-        const duplicado =
-          nomesJaSelecionados.has(nome) || nomesAdicionadosNoMesmoEnvio.has(nome);
-  
-        if (duplicado) {
-          arquivosRepetidos.push(nome);
-        } else {
-          this.selectedFiles.push(novo);
-          nomesAdicionadosNoMesmoEnvio.add(nome);
-        }
-      }
-  
-      if (arquivosRepetidos.length > 0) {
-        this.mensagem = `Arquivo já selecionado: ${arquivosRepetidos.join(', ')}`;
-        setTimeout(() => {
-          this.mensagem = '';
-        }, 3000);
+      this.addFiles(Array.from(input.files));
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragging = false;
+    if (event.dataTransfer?.files) {
+      this.addFiles(Array.from(event.dataTransfer.files));
+    }
+  }
+
+  addFiles(novosArquivos: File[]): void {
+    let arquivoDuplicado = false;
+
+    for (const novo of novosArquivos) {
+      const jaExiste = this.selectedFiles.some(f => f.name === novo.name);
+      if (jaExiste) {
+        arquivoDuplicado = true;
       } else {
-        this.mensagem = '';
+        this.selectedFiles.push(novo);
       }
     }
-  }  
-  
+
+    this.mensagem = arquivoDuplicado ? 'Alguns arquivos já foram selecionados e foram ignorados.' : '';
+  }
+
+  removerArquivo(index: number): void {
+    this.selectedFiles.splice(index, 1);
+  }
 
   enviarArquivos(): void {
     if (this.selectedFiles.length === 0) return;
 
     this.carregando = true;
     this.erro = '';
+    this.mensagem = '';
 
     this.geminiService.uploadImages(this.selectedFiles).subscribe({
       next: (res) => {
@@ -74,18 +86,11 @@ export class UploadComponent {
     });
   }
 
-  removerArquivo(index: number): void {
-    this.selectedFiles.splice(index, 1);
-  }
-
   limparTela(): void {
     this.selectedFiles = [];
     this.dadosExtraidos = [];
     this.dataId = '';
-    this.mensagem = '';
     this.erro = '';
-    this.carregando = false;
-  }  
+    this.mensagem = '';
+  }
 }
-
-

@@ -1,42 +1,56 @@
-<!-- Imagem no canto superior direito -->
-<img 
-  src="assets/img.webp" 
-  alt="Logo superior direito deslocado"
-  style="position: fixed; top: 40px; right: 80px; height: 400px; z-index: 100;">
+<!-- Flex container with left drop zone and right image -->
+<div class="upload-container">
+  <!-- Left: Upload box -->
+  <div class="upload-left">
+    <h2>Upload de Romaneios</h2>
 
+    <div 
+      class="drop-zone" 
+      [class.dragging]="isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      Arraste os arquivos aqui ou
+      <label class="custom-file-upload">
+        <input type="file" multiple (change)="onFileSelected($event)" hidden>
+        Escolher arquivos
+      </label>
+    </div>
 
-<h2>Upload de Romaneios</h2>
+    <button 
+      (click)="enviarArquivos()" 
+      *ngIf="selectedFiles.length > 0">
+      Enviar
+    </button>
 
-<div class="upload-section">
-  <label class="custom-file-upload">
-    <input type="file" multiple (change)="onFileSelected($event)" hidden>
-    Escolher arquivos
-  </label>
+    <ul>
+      <li *ngFor="let file of selectedFiles; let i = index">
+        {{ file.name }}
+        <span 
+          (click)="removerArquivo(i)" 
+          style="color: red; cursor: pointer; margin-left: 8px;"
+          title="Remover">
+          &times;
+        </span>
+      </li>
+    </ul>
 
-  <button 
-    (click)="enviarArquivos()" 
-    *ngIf="selectedFiles.length > 0">
-    Enviar
-  </button>
+    <p *ngIf="mensagem" style="color: red;">{{ mensagem }}</p>
+    <p *ngIf="carregando">Carregando...</p>
+    <p *ngIf="erro" style="color: red;">{{ erro }}</p>
+  </div>
+
+  <!-- Right: Logo image -->
+  <div class="upload-right">
+    <img 
+      src="assets/img.webp" 
+      alt="Logo superior direito deslocado"
+    >
+  </div>
 </div>
 
-<ul>
-  <li *ngFor="let file of selectedFiles; let i = index">
-    {{ file.name }}
-    <span 
-      (click)="removerArquivo(i)" 
-      style="color: red; cursor: pointer; margin-left: 8px;"
-      title="Remover">
-      &times;
-    </span>
-  </li>
-</ul>
-
-<p *ngIf="mensagem" style="color: red;">{{ mensagem }}</p>
-
-<p *ngIf="carregando">Carregando...</p>
-<p *ngIf="erro" style="color: red;">{{ erro }}</p>
-
+<!-- Extracted data table -->
 <div *ngIf="dadosExtraidos.length > 0">
   <h3>Dados extraídos:</h3>
   <table border="1">
@@ -65,13 +79,10 @@
   </table>
 </div>
 
+<!-- Review component -->
 <app-review
   *ngIf="dadosExtraidos.length > 0"
   [data]="dadosExtraidos"
   [dataId]="dataId"
   (aoFinalizar)="limparTela()">
 </app-review>
-
-
-
-

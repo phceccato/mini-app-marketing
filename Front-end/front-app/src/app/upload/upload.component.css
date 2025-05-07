@@ -24,7 +24,7 @@
     transition: background-color 0.3s ease;
   }
   
-  button:hover {
+  button:hover, .custom-file-upload:hover {
     background-color: #1e8449;
   }
   
@@ -50,10 +50,6 @@
     margin-bottom: 10px;
   }
   
-  .custom-file-upload:hover {
-    background-color: #1e8449;
-  }
-  
   .upload-section {
     display: flex;
     flex-direction: column;
@@ -69,3 +65,40 @@
     padding: 0.5rem;
     text-align: center;
   }
+
+  .upload-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 20px;
+  }
+  
+  .upload-left {
+    flex: 1;
+    max-width: 700px;
+  }
+  
+  .upload-right img {
+    height: 400px;
+    padding-left: 500px;
+  }
+  
+  .drop-zone {
+    border: 2px dashed #ccc;
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .drop-zone.dragging {
+    background-color: #b6d8c4;
+    border-color: #04BF55;
+  }
+  
+  .custom-file-upload {
+    color: #ffffff;
+    cursor: pointer;
+  }
+  
+  
