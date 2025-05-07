@@ -26,14 +26,20 @@ export class ReviewComponent {
   ) {}
 
   baixarExcel(): void {
+    // Força os campos em maiúsculo antes de enviar
+    this.data.forEach(item => {
+      item.nomeProdutor = item.nomeProdutor?.toUpperCase();
+      item.tipoCultura = item.tipoCultura?.toUpperCase();
+    });
+  
     if (!this.dataId || this.data.length === 0) {
       this.erro = 'Sem dados para gerar e baixar Excel.';
       return;
     }
-
+  
     this.gerando = true;
     this.erro = '';
-
+  
     this.geminiService.reviewData(this.dataId, this.data).subscribe({
       next: (res) => {
         const excelId = res.excelId;
@@ -45,8 +51,6 @@ export class ReviewComponent {
           a.click();
           window.URL.revokeObjectURL(url);
           this.gerando = false;
-
-          // 🔥 Emite o evento somente após o download
           this.aoFinalizar.emit();
         });
       },
@@ -55,5 +59,5 @@ export class ReviewComponent {
         this.gerando = false;
       }
     });
-  }
+  }  
 }

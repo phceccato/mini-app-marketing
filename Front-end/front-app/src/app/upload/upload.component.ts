@@ -26,6 +26,7 @@ export class UploadComponent {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.addFiles(Array.from(input.files));
+      input.value = ''; // 🔧 permite reenviar o mesmo arquivo
     }
   }
 
@@ -48,18 +49,32 @@ export class UploadComponent {
   }
 
   addFiles(novosArquivos: File[]): void {
-    let arquivoDuplicado = false;
+    const ignorados: string[] = [];
+
+    // Combina nome, tamanho e data de modificação para evitar falsos positivos
+    const arquivosExistentes = new Set(
+      this.selectedFiles.map(f => `${f.name}-${f.size}-${f.lastModified}`)
+    );
 
     for (const novo of novosArquivos) {
-      const jaExiste = this.selectedFiles.some(f => f.name === novo.name);
-      if (jaExiste) {
-        arquivoDuplicado = true;
+      const chave = `${novo.name}-${novo.size}-${novo.lastModified}`;
+
+      if (arquivosExistentes.has(chave)) {
+        ignorados.push(novo.name);
       } else {
         this.selectedFiles.push(novo);
+        arquivosExistentes.add(chave);
       }
     }
 
-    this.mensagem = arquivoDuplicado ? 'Alguns arquivos já foram selecionados e foram ignorados.' : '';
+    if (ignorados.length > 0) {
+      this.mensagem = `Arquivo(s) já selecionado(s): ${ignorados.join(', ')}`;
+      setTimeout(() => {
+        this.mensagem = '';
+      }, 3000);
+    } else {
+      this.mensagem = '';
+    }
   }
 
   removerArquivo(index: number): void {

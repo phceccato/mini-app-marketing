@@ -15,8 +15,12 @@
   <tbody>
     <tr *ngFor="let item of data">
       <td><input [(ngModel)]="item.data" /></td>
-      <td>{{ item.nomeProdutor | uppercase }}</td>
-      <td>{{ item.tipoCultura | uppercase }}</td>
+      <td>
+        <input [(ngModel)]="item.nomeProdutor" style="text-transform: uppercase;">
+      </td>
+      <td>
+        <input [(ngModel)]="item.tipoCultura" style="text-transform: uppercase;">
+      </td>      
       <td><input [(ngModel)]="item.pesoBruto" /></td>
       <td><input [(ngModel)]="item.umidade" /></td>
       <td><input [(ngModel)]="item.impureza" /></td>
