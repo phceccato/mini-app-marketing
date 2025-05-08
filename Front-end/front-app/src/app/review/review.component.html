@@ -1,5 +1,6 @@
 <h3>Revisar e Corrigir Dados</h3>
 
+<!-- Tabela para exibir/permitir a edição dos dados -->
 <table border="1">
   <thead>
     <tr>
@@ -13,7 +14,9 @@
     </tr>
   </thead>
   <tbody>
+    <!-- Itera sobre cada item para exibir os dados em cada linha -->
     <tr *ngFor="let item of data">
+      <!-- Campos para edição -->
       <td><input [(ngModel)]="item.data" /></td>
       <td>
         <input [(ngModel)]="item.nomeProdutor" style="text-transform: uppercase;">
@@ -29,6 +32,11 @@
   </tbody>
 </table>
 
+<!-- Botão para gerar e baixar o arquivo Excel -->
 <button (click)="baixarExcel()" [disabled]="gerando">Baixar Excel</button>
+
+<!-- Exibe uma mensagem de erro -->
 <p *ngIf="erro" style="color:red">{{ erro }}</p>
+
+<!-- Mensagem indicando que o Excel está sendo gerado -->
 <p *ngIf="gerando">Gerando e baixando Excel...</p>

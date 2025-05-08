@@ -1,17 +1,13 @@
 package com.aegro.projeto.service;
 
-// Importa a classe modelo que representa os dados estruturados extraídos da imagem
 import com.aegro.projeto.model.RomaneioInfo;
 
-// Importa classes para manipulação de JSON
+// Manipulação de JSON
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-// Importa anotações e classes do Spring
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-// Importa classes de IO e rede
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -25,19 +21,19 @@ import java.util.Base64;
 @Service
 public class GeminiImageAnalyzer {
 
-    // Injeta a chave da API do Gemini a partir do application.properties
+    // Injeta a chave da API do Gemini
     @Value("${gemini.api.key}")
     private String apiKey;
 
     // Método principal que realiza a análise da imagem com base no caminho do arquivo
     public RomaneioInfo analisarImagem(String imagePath) throws IOException, InterruptedException {
-        // Lê os bytes da imagem a partir do caminho fornecido
+        // Lê os bytes da imagem
         byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
         
         // Converte os bytes da imagem em uma string Base64 para envio via JSON
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
-        // Define o prompt que será enviado à API Gemini, solicitando extração estruturada de informações
+        // Define o prompt que será enviado à API Gemini
         String prompt = """
             Extraia as seguintes informações deste recibo de carga agrícola:
             - data (formato: dd/MM/yyyy)
@@ -123,7 +119,7 @@ public class GeminiImageAnalyzer {
         return mapper.readValue(rawJson, RomaneioInfo.class);
     }
 
-    // Sobrecarga auxiliar que analisa uma imagem padrão para facilitar testes
+    // Método auxiliar que processa uma imagem padrão (Romaneio_1.jpeg) para facilitar a execução de testes
     public RomaneioInfo analisarImagem() throws IOException, InterruptedException {
         return analisarImagem("src/main/resources/imagens/Milho 1.jpeg");
     }

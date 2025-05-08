@@ -1,9 +1,8 @@
-<!-- Flex container with left drop zone and right image -->
 <div class="upload-container">
-  <!-- Left: Upload box -->
   <div class="upload-left">
     <h2>Upload de Romaneios</h2>
 
+    <!-- Caixa de arraste para upload de arquivos -->
     <div 
       class="drop-zone" 
       [class.dragging]="isDragging"
@@ -13,20 +12,24 @@
     >
       Arraste os arquivos ou
       <label class="custom-file-upload">
+        <!-- Input de arquivo(s) -->
         <input type="file" multiple (change)="onFileSelected($event)" hidden>
         Escolher arquivos
       </label>
     </div>
 
+    <!-- Botão de envio -->
     <button 
       (click)="enviarArquivos()" 
       *ngIf="selectedFiles.length > 0">
       Enviar
     </button>
 
+    <!-- Lista de arquivos -->
     <ul>
       <li *ngFor="let file of selectedFiles; let i = index">
         {{ file.name }}
+        <!-- Remove o arquivo da lista -->
         <span 
           (click)="removerArquivo(i)" 
           style="color: red; cursor: pointer; margin-left: 8px;"
@@ -36,12 +39,14 @@
       </li>
     </ul>
 
+    <!-- Mensagem de alerta -->
     <p *ngIf="mensagem" style="color: red;">{{ mensagem }}</p>
+    <!-- Mensagem de carregamento -->
     <p *ngIf="carregando">Carregando...</p>
+    <!-- Mensagem de erro  -->
     <p *ngIf="erro" style="color: red;">{{ erro }}</p>
   </div>
 
-  <!-- Right: Logo image -->
   <div class="upload-right">
     <img 
       src="assets/img.webp" 
@@ -50,7 +55,7 @@
   </div>
 </div>
 
-<!-- Extracted data table -->
+<!-- Tabela para exibir os dados extraídos -->
 <div *ngIf="dadosExtraidos.length > 0">
   <h3>Dados extraídos:</h3>
   <table border="1">
@@ -79,7 +84,7 @@
   </table>
 </div>
 
-<!-- Review component -->
+<!-- Componente de revisão / Limpa a tela após download-->
 <app-review
   *ngIf="dadosExtraidos.length > 0"
   [data]="dadosExtraidos"

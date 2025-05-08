@@ -1,9 +1,8 @@
 package com.aegro.projeto.service;
 
-// Importa a classe de modelo RomaneioInfo
 import com.aegro.projeto.model.RomaneioInfo;
 
-// Importações da biblioteca Apache POI para manipulação de arquivos Excel
+// Apache POI para manipulação de arquivos Excel
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -21,13 +20,12 @@ public class ExcelExporter {
 
     // Método responsável por exportar uma lista de objetos RomaneioInfo para um arquivo Excel
     public String exportToExcel(List<RomaneioInfo> infoList) throws IOException {
-        // Cria o diretório de saída, caso ele ainda não exista
+        // Cria o diretório de saída
         File dir = new File(FOLDER);
         if (!dir.exists()) dir.mkdirs();
 
         // Gera um identificador único para o arquivo
         String fileId = UUID.randomUUID().toString();
-        // Define o nome do arquivo com base no identificador
         String filename = "recibo_" + fileId + ".xlsx";
         File file = new File(dir, filename);
 
@@ -46,9 +44,8 @@ public class ExcelExporter {
         header.createCell(5).setCellValue("Impureza");
         header.createCell(6).setCellValue("Peso Líquido");
 
-        // Inicializa o índice da linha para adicionar os dados (começando na linha 1)
         int rowIdx = 1;
-        // Itera sobre a lista de objetos RomaneioInfo e popula a planilha
+        // Itera sobre a lista de objetos RomaneioInfo e preenche a planilha
         for (RomaneioInfo info : infoList) {
             Row row = sheet.createRow(rowIdx++);
             row.createCell(0).setCellValue(info.getData());
